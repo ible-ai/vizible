@@ -1,0 +1,1 @@
+from ._viz import red, green, blue, magenta, cyan
