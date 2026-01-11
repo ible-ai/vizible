@@ -2,7 +2,7 @@
 name = "vizible"
 version = "1.0.1"
 description = "Basic visualization utilities with minimal dependencies."
-requires-python = ">=3.13"
+requires-python = ">=3.12"
 dependencies = []
 
 [build-system]
