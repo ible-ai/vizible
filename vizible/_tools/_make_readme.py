@@ -98,7 +98,8 @@ def main():
     vizible.blue("Substitution completed.")
 
     # Write formatted README to disk.
-    with open(os.path.join(os.path.dirname(cur_dir), "_src/README.md"), "w") as f:
+    project_root = os.path.dirname(os.path.dirname(cur_dir))
+    with open(os.path.join(project_root, "README.md"), "w") as f:
         f.write(template)
     vizible.green("Done")
 
