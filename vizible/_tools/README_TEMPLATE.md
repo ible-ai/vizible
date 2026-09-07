@@ -14,15 +14,20 @@ color to each `dprint` call site.
 ## Usage
 
 ```python
-from vizible import dprint, red, green
+from vizible import blue, cyan, dprint, green, magenta, red
 
-# Each call site gets a deterministic color
-dprint("This is always the same blue-ish color")
-dprint("This is always the same orange-ish color")
+print("Regular print")
 
-# High-contrast status helpers
-red("Something went wrong")
-green("Process complete")
+# Each dprint call site gets a deterministic color
+dprint("Line-aware color A")
+dprint("Line-aware color B")
+
+# ANSI color helpers
+red("red print")
+green("green print")
+blue("blue print")
+magenta("magenta print")
+cyan("cyan print")
 ```
 
 ## Example Output
