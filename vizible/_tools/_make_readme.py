@@ -1,64 +1,74 @@
-r"""Make README.md with real time demo.
+r"""Make the README and a rendered preview from the real ANSI demo output.
 
 > Usage:
-python vizible/_tools/_make_readme.py
+python3 vizible/_tools/_make_readme.py
 
 """
 
 import io
 import os
 import re
+import sys
+from html import escape
 from contextlib import redirect_stdout
+from types import FunctionType
 
+
+# Support the documented command when run from a source checkout.
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
 
 import vizible
 
 
-def _format_html(text: str, black_background: bool = True) -> str:
-    # Handle Reset
-    text = re.sub(r"\x1b\[0?m", "</span>", text)
+_ANSI_PALETTE = {
+    # The ANSI standard specifies these SGR codes, not their RGB values. This
+    # preview intentionally uses xterm's default palette; users' terminals may
+    # choose different values.
+    "31": "#cd0000",
+    "32": "#00cd00",
+    "34": "#0000ee",
+    "35": "#cd00cd",
+    "36": "#00cdcd",
+}
 
-    # Remove carriage returns
+
+def _ansi_line_to_svg_text(text: str) -> tuple[str, str]:
+    """Return the printable text and the color represented by one ANSI line."""
     text = text.replace("\r", "")
-    background_color = "#1e1e1e" if black_background else "#d4d4d4"
-    color = "#d4d4d4" if black_background else "#1e1e1e"
-    return f'<pre style="background: {background_color}; color: {color}; padding: 15px; border-radius: 5px; font-family: monospace;">{text}</pre>'
+    rgb_match = re.search(r"\x1b\[38;2;(\d+);(\d+);(\d+)m", text)
+    if rgb_match:
+        color = f"rgb({rgb_match.group(1)}, {rgb_match.group(2)}, {rgb_match.group(3)})"
+    else:
+        basic_match = re.search(r"\x1b\[(\d+)m", text)
+        color = _ANSI_PALETTE.get(basic_match.group(1), "#d4d4d4") if basic_match else "#d4d4d4"
+
+    printable = re.sub(r"\x1b\[[0-9;]*m", "", text)
+    return printable, color
 
 
-def _ansi_to_html(text):
-    # Basic ANSI logic
-    # \x1b[38;2;R;G;Bm -> <span style="color: rgb(R,G,B)">
-    # \x1b[31m -> <span style="color: red">
-    # \x1b[0m or \x1b[m -> </span>
-
-    # Handle RGB
-    rgb_substituted_text = re.sub(
-        r"\x1b\[38;2;(\d+);(\d+);(\d+)m",
-        r'<span style="color: rgb(\1,\2,\3)">',
-        text,
-    )
-    if rgb_substituted_text != text:
-        return _format_html(rgb_substituted_text)
-
-    if re.search(r"\x1b\[(\d+)m", text):
-        # Handle Basic 16 colors (just the ones we use)
-        colors = {
-            "31": "red",
-            "32": "green",
-            "34": "blue",
-            "35": "magenta",
-            "36": "cyan",
-        }
-        specified_color_text = text
-        for code, name in colors.items():
-            specified_color_text = specified_color_text.replace(
-                f"\x1b[{code}m",
-                f'<span style="color: {name}">',
-            )
-        return _format_html(specified_color_text)
-
-    # Text without any ANSI codes.
-    return _format_html(text, black_background=False)
+def _render_svg(lines: list[str]) -> str:
+    """Render captured output as an SVG GitHub can display without CSS sanitizing it."""
+    line_height = 30
+    top = 54
+    width = 720
+    height = top + len(lines) * line_height + 24
+    output = [
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-labelledby="title desc">',
+        "<title id=\"title\">vizible ANSI output</title>",
+        "<desc id=\"desc\">A dark terminal preview with color-coded log lines.</desc>",
+        f'<rect width="{width}" height="{height}" rx="8" fill="#1e1e1e"/>',
+        '<text x="24" y="31" fill="#9da5b4" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="15">Captured ANSI output</text>',
+    ]
+    for index, line in enumerate(lines):
+        printable, color = _ansi_line_to_svg_text(line)
+        y = top + index * line_height
+        output.append(
+            f'<text x="24" y="{y}" fill="{color}" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">{escape(printable)}</text>'
+        )
+    output.append("</svg>")
+    return "\n".join(output) + "\n"
 
 
 def demo():
@@ -72,33 +82,44 @@ def demo():
     vizible.cyan("cyan print")
 
 
-_SUBSTITUTION_TAG = "SUBSTITUTE_HERE"
+def _run_demo_with_stable_filename() -> None:
+    """Run the real demo with a location-independent call-site filename.
+
+    ``dprint`` intentionally incorporates its caller's filename in the color
+    seed. A generated documentation asset should not change merely because a
+    release runs from a different checkout directory, so only this demo uses a
+    fixed filename in its frame metadata.
+    """
+    stable_code = demo.__code__.replace(co_filename="README demo")
+    stable_demo = FunctionType(
+        stable_code,
+        demo.__globals__,
+        name=demo.__name__,
+        argdefs=demo.__defaults__,
+        closure=demo.__closure__,
+    )
+    stable_demo()
 
 
 def main():
     # Capture all sys out.
     buffer = io.StringIO()
     with redirect_stdout(buffer):
-        demo()
+        _run_demo_with_stable_filename()
     joined_content = buffer.getvalue()
     contents = [x for x in joined_content.split("\n") if x]
-    html_contents = []
-    for content in contents:
-        html_contents.append(_ansi_to_html(content))
-    html_content = "\n".join(html_contents)
-    vizible.magenta("HTML content generated.")
-
     # Get README template.
     cur_dir = os.path.dirname(os.path.abspath(__file__))
     with open(os.path.join(cur_dir, "README_TEMPLATE.md"), "r") as f:
         template = f.read()
 
-    # Substitute formatted stdout into README.
-    template = template.replace(_SUBSTITUTION_TAG, html_content)
-    vizible.blue("Substitution completed.")
-
-    # Write formatted README to disk.
+    # Write the README and an image whose colors survive GitHub's HTML sanitizer.
     project_root = os.path.dirname(os.path.dirname(cur_dir))
+    assets_dir = os.path.join(project_root, "assets")
+    os.makedirs(assets_dir, exist_ok=True)
+    with open(os.path.join(assets_dir, "demo.svg"), "w") as f:
+        f.write(_render_svg(contents))
+
     with open(os.path.join(project_root, "README.md"), "w") as f:
         f.write(template)
     vizible.green("Done")

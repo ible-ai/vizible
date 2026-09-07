@@ -1,7 +1,8 @@
 [project]
 name = "vizible"
-version = "1.0.1"
+version = "1.0.2"
 description = "Basic visualization utilities with minimal dependencies."
+readme = "README.md"
 requires-python = ">=3.12"
 dependencies = []
 

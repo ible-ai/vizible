@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="318" viewBox="0 0 720 318" role="img" aria-labelledby="title desc">
+<title id="title">vizible ANSI output</title>
+<desc id="desc">A dark terminal preview with color-coded log lines.</desc>
+<rect width="720" height="318" rx="8" fill="#1e1e1e"/>
+<text x="24" y="31" fill="#9da5b4" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="15">Captured ANSI output</text>
+<text x="24" y="54" fill="#d4d4d4" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">Regular print</text>
+<text x="24" y="84" fill="rgb(103, 240, 225)" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">Line-aware color A</text>
+<text x="24" y="114" fill="rgb(233, 110, 255)" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">Line-aware color B</text>
+<text x="24" y="144" fill="#cd0000" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">red print</text>
+<text x="24" y="174" fill="#00cd00" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">green print</text>
+<text x="24" y="204" fill="#0000ee" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">blue print</text>
+<text x="24" y="234" fill="#cd00cd" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">magenta print</text>
+<text x="24" y="264" fill="#00cdcd" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">cyan print</text>
+</svg>
