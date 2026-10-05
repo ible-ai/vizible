@@ -1,5 +1,7 @@
 # vizible
 
+[self-link to github repo](https://github.com/ible-ai/vizible)
+
 Minimal, deterministic color-coded debugging for Python.
 
 `vizible` provides a way to track execution flow by assigning a deterministic
