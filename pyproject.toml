@@ -1,7 +1,7 @@
 [project]
 name = "vizible"
 version = "1.0.3"
-description = "Basic visualization utilities with minimal dependencies."
+description = "Minimal, deterministic color-coded debugging for Python."
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = []
