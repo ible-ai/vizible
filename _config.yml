@@ -1,0 +1,10 @@
+# GitHub Pages (viz.ible.ai) renders README.md with the default theme.
+title: vizible
+description: Minimal, deterministic color-coded debugging for Python.
+url: https://viz.ible.ai
+baseurl: ""
+defaults:
+  - scope:
+      path: ""
+    values:
+      image: /assets/og.png
