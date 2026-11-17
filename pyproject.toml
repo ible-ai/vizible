@@ -1,10 +1,23 @@
 [project]
 name = "vizible"
-version = "1.0.3"
+version = "1.1.0"
 description = "Minimal, deterministic color-coded debugging for Python."
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = []
+keywords = ["debugging", "print", "color", "terminal", "ansi"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Topic :: Software Development :: Debuggers",
+    "Typing :: Typed",
+]
+
+[project.urls]
+Homepage = "https://viz.ible.ai"
+Repository = "https://github.com/ible-ai/vizible"
 
 [build-system]
 requires = ["hatchling"]
