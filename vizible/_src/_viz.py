@@ -1,31 +1,74 @@
-"""Visualization helpers and tools."""
+"""Fixed-color print helpers using the terminal's standard ANSI palette.
+
+Each takes the same arguments as ``print``.
+"""
+
+from typing import Any, Optional, TextIO
+
+from ._ansi import emit
 
 
-def _colorize(text: str, color_code: int) -> None:
-    """Applies ANSI color codes to the text."""
-    print(f"\033[{color_code}m{text}\033[m")
+def red(
+    *args: Any,
+    sep: Optional[str] = " ",
+    end: Optional[str] = "\n",
+    file: Optional[TextIO] = None,
+    flush: bool = False,
+) -> None:
+    """Print red text (ANSI SGR 31)."""
+    emit("31", args, sep, end, file, flush)
 
 
-def red(text: str) -> None:
-    """Print red text."""
-    return _colorize(text, 31)
+def green(
+    *args: Any,
+    sep: Optional[str] = " ",
+    end: Optional[str] = "\n",
+    file: Optional[TextIO] = None,
+    flush: bool = False,
+) -> None:
+    """Print green text (ANSI SGR 32)."""
+    emit("32", args, sep, end, file, flush)
 
 
-def green(text: str) -> None:
-    """Print green text."""
-    return _colorize(text, 32)
+def yellow(
+    *args: Any,
+    sep: Optional[str] = " ",
+    end: Optional[str] = "\n",
+    file: Optional[TextIO] = None,
+    flush: bool = False,
+) -> None:
+    """Print yellow text (ANSI SGR 33)."""
+    emit("33", args, sep, end, file, flush)
 
 
-def blue(text: str) -> None:
-    """Print blue text."""
-    return _colorize(text, 34)
+def blue(
+    *args: Any,
+    sep: Optional[str] = " ",
+    end: Optional[str] = "\n",
+    file: Optional[TextIO] = None,
+    flush: bool = False,
+) -> None:
+    """Print blue text (ANSI SGR 34)."""
+    emit("34", args, sep, end, file, flush)
 
 
-def magenta(text: str) -> None:
-    """Print magenta text."""
-    return _colorize(text, 35)
+def magenta(
+    *args: Any,
+    sep: Optional[str] = " ",
+    end: Optional[str] = "\n",
+    file: Optional[TextIO] = None,
+    flush: bool = False,
+) -> None:
+    """Print magenta text (ANSI SGR 35)."""
+    emit("35", args, sep, end, file, flush)
 
 
-def cyan(text: str) -> None:
-    """Print cyan text."""
-    return _colorize(text, 36)
+def cyan(
+    *args: Any,
+    sep: Optional[str] = " ",
+    end: Optional[str] = "\n",
+    file: Optional[TextIO] = None,
+    flush: bool = False,
+) -> None:
+    """Print cyan text (ANSI SGR 36)."""
+    emit("36", args, sep, end, file, flush)

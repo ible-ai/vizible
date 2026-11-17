@@ -28,6 +28,7 @@ _ANSI_PALETTE = {
     # choose different values.
     "31": "#cd0000",
     "32": "#00cd00",
+    "33": "#cdcd00",
     "34": "#0000ee",
     "35": "#cd00cd",
     "36": "#00cdcd",
@@ -73,10 +74,12 @@ def _render_svg(lines: list[str]) -> str:
 
 def demo():
     print("Regular print")
-    vizible.dprint("Line-aware color A")
-    vizible.dprint("Line-aware color B")
+    for step in range(3):
+        vizible.dprint("fetching batch", step)
+        vizible.dprint("parsed", step * 10, "rows")
     vizible.red("red print")
     vizible.green("green print")
+    vizible.yellow("yellow print")
     vizible.blue("blue print")
     vizible.magenta("magenta print")
     vizible.cyan("cyan print")
